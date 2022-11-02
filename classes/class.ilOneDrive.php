@@ -1,12 +1,19 @@
 <?php
 require_once('Customizing/global/plugins/Modules/Cloud/CloudHook/OneDrive/vendor/autoload.php');
 
+use srag\Plugins\OneDrive\Databay;
+
 /**
  * Class ilOneDrive
  *
  * @author Fabian Schmid <fs@studer-raimann.ch>
  */
 class ilOneDrive extends ilCloudPlugin {
+
+    /**
+	 * @var Databay
+	 */
+    private static $databay;
 
 	/**
 	 * @var exodApp
@@ -156,6 +163,15 @@ class ilOneDrive extends ilCloudPlugin {
 	public function setPublicLink($public_link) {
 		$this->public_link = $public_link;
 	}
+
+    public function databay(): Databay
+    {
+        if (!self::$databay) {
+            global $DIC;
+            self::$databay = new Databay($DIC, $this->getPluginHookObject());
+        }
+        return self::$databay;
+    }
 
 
 	/**

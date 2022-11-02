@@ -48,8 +48,10 @@ class ilOneDriveFileTreeGUI extends ilCloudPluginFileTreeGUI
                 $item->setVariable("SRC_ICON", ilUtil::getImagePath('icon_dcl_file.svg'));
             }
 
-            $item->setVariable("TXT_DESC",
-                $this->formatBytes($node->getSize()) . "&nbsp;&nbsp;&nbsp;" . $modified);
+            $item->setVariable(
+                "TXT_DESC",
+                $this->formatBytes($node->getSize()) . "&nbsp;&nbsp;&nbsp;" . $modified . $this->getPluginObject()->databay()->textOfUploadedFile($node, $this->getPluginObject()->getObjId())
+            );
             if ($download) {
                 $item->setVariable("TXT_TITLE_LINKED", $this->basenameify($node->getPath()));
                 $item->setVariable("HREF_TITLE_LINKED", $ilCtrl->getLinkTarget($gui_class, "getFile") . "&id=" . $node->getId());

@@ -17,16 +17,42 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
 
     const SUBTAB_GENERAL = 'general';
     const SUBTAB_LOGS = 'logs';
+    const SETTINGS = self::class;
 
 	/**
 	 * @var ilPropertyFormGUI
 	 */
 	protected $form;
 
+    public function __construct($plugin_service_class)
+    {
+        parent::__construct($plugin_service_class);
+    }
+
 
     protected function initPluginSettings()
     {
+        global $DIC;
+        $this->settings = self::createSettings($this->cloud_object->getId());
         $this->form->getItemByPostVar('root_folder')->setDisabled(true);
+
+        $section = new ilFormSectionHeaderGUI();
+        $section->setTitle($this->getPluginHookObject()->txt('schedule'));
+        $this->form->addItem($section);
+
+        $start_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('start_date'), 'start_date');
+        $start_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('start_date', ''), 0));
+        $this->form->addItem($start_date);
+
+        $end = new ilCheckboxInputGUI($this->getPluginHookObject()->txt('deadline'), 'end');
+        $end->setChecked(true);
+        $this->form->addItem($end);
+        $end_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('end_date'), 'end_date');
+        $end_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('end_date', ''), 0));
+        $end->addSubItem($end_date);
+        $extra_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('extra_date'), 'extra_date');
+        $extra_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('extra_date', ''), 0));
+        $end_date->addSubItem($extra_date);
     }
 
 
@@ -40,6 +66,7 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
 
 			if ($this->form->checkInput()) {
 				$_POST['title'] = exodPath::validateBasename($this->form->getInput("title"));
+				array_map([$this, 'save'], ['start_date', 'end', 'end_date', 'extra_date']);
 			}
 
 			parent::updateSettings();
@@ -104,6 +131,7 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
         $DIC->tabs()->activateTab('settings');
         $this->initSubtabs(self::SUBTAB_LOGS);
         $DIC->ui()->mainTemplate()->setContent(
+            $this->getPluginObject()->databay()->exportEventLog($this->getPluginObject()->getObjId())->render() .
             (new EventLogTableUI($DIC, $this->getPluginObject()->getObjId()))->render()
         );
     }
@@ -140,6 +168,16 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
     protected function getMakeOwnPluginSection()
     {
         return false;
+    }
+
+    private function save(string $key)
+    {
+        $this->settings->set($key, (string) $this->form->getInput($key));
+    }
+
+    public static function createSettings(int $id): ilSetting
+    {
+        return new ilSetting(self::SETTINGS . '_' . $id);
     }
 }
 

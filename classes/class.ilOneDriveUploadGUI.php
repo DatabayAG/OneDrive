@@ -31,6 +31,10 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
 
     public function asyncUploadFile()
     {
+        if (!$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId())) {
+            return;
+        }
+
         global $DIC;
         $ilTabs = $DIC['ilTabs'];
 
@@ -101,11 +105,14 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
         $name = filter_input(INPUT_POST, 'filename', FILTER_SANITIZE_STRING);
         $name = $this->sanitizeFileName($name);
         $parent_id = $_SESSION["cld_folder_id"];
-        EventLogger::logUploadComplete(
+        $entry = EventLogger::logUploadComplete(
             $DIC->user()->getId(),
             $this->getPluginObject()->getObjId(),
-            ilCloudFileTree::getFileTreeFromSession()->getNodeFromId($parent_id)->getPath() . '/' . $name
+            ilCloudFileTree::getFileTreeFromSession()->getNodeFromId($parent_id)->getPath() . '/' . $name,
+            $this->getPluginObject()->databay()->extraData($this->getPluginObject()->getObjId())
         );
+
+        $this->getPluginObject()->databay()->uploadSuccess($entry);
     }
 
     protected function asyncGetResumableUploadUrl()
@@ -122,20 +129,21 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
         try {
             $upload_url = $this->getService()->getClient()->getResumableUploadUrl($parent_id, $name_sanitized);
         } catch (ilCloudException $e) {
-            EventLogger::logUploadFailed(
+            $entry = EventLogger::logUploadFailed(
                 $DIC->user()->getId(),
                 $this->getPluginObject()->getObjId(),
                 $file_path,
                 $e->getMessage()
             );
-            echo $this->getJsonError(500, $e->getMessage());
+            $this->getPluginObject()->databay()->uploadFailed($entry, 500);
             exit;
         }
         EventLogger::logUploadStarted(
             $DIC->user()->getId(),
             $this->getPluginObject()->getObjId(),
             $file_path,
-            $name_sanitized === $name ? '' : $name
+            $name_sanitized === $name ? '' : $name,
+            $this->getPluginObject()->databay()->extraData($this->getPluginObject()->getObjId())
         );
         http_response_code(200);
         echo $upload_url->toJson();
@@ -149,12 +157,14 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
         $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
         $parent_id = $_SESSION["cld_folder_id"];
         $file_path = ilCloudFileTree::getFileTreeFromSession()->getNodeFromId($parent_id)->getPath() . '/' . $name;
-        EventLogger::logUploadFailed(
+        $entry = EventLogger::logUploadFailed(
             $DIC->user()->getId(),
             $this->getPluginObject()->getObjId(),
             $file_path,
             $message ?? ''
         );
+
+        $this->getPluginObject()->databay()->uploadFailed($entry);
     }
 
     protected function uploadAborted()
@@ -196,4 +206,8 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
         return parent::getService();
     }
 
+    protected function exportEventLog()
+    {
+        $this->getPluginObject()->databay()->exportEventLog((int) $this->getPluginObject()->getObjId())->export();
+    }
 }

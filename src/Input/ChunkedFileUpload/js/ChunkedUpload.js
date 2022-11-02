@@ -48,10 +48,9 @@ initChunkedUpload = (
           type: 'post',
           url: url_upload_failed,
           data: { filename: file.name, message: e.errorThrown }
-        });
+        }).success(window.databayOneDrivePlugin.fileUploaded);
         il.waiter.hide();
         this.file_in_progress = undefined;
-        alert('Error: ' + data.errorThrown)
       });
 
       // session refresher every 5 minutes for very long uploads 300000
@@ -70,8 +69,7 @@ initChunkedUpload = (
     }).fail((err) => {
       clearInterval(this.session_refresher);
       il.waiter.hide();
-      const error_json = JSON.parse(err.responseText);
-      alert(error_json.error.message + "<br>Please contact an administrator.");
+      window.databayOneDrivePlugin.fileUploaded(err.responseText);
     });
   });
 

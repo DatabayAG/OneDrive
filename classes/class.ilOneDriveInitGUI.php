@@ -16,8 +16,10 @@ class ilOneDriveInitGUI extends ilCloudPluginInitGUI {
      */
     public function beforeSetContent()
     {
+        $info = $this->getPluginObject()->databay()->beforeSetContent($this->getGUIClass()->object);
         global $DIC;
         $DIC->ui()->mainTemplate()->addJavaScript("./Customizing/global/plugins/Modules/Cloud/CloudHook/OneDrive/js/OneDriveList.js");
+        $DIC->ui()->mainTemplate()->addJavaScript("./Customizing/global/plugins/Modules/Cloud/CloudHook/OneDrive/js/databay.js");
         srChunkedDirectFileUploadInputGUI::loadJavaScript($DIC->ui()->mainTemplate());
         $rename_url = $DIC->ctrl()->getLinkTargetByClass([ilObjCloudGUI::class, ilCloudPluginActionListGUI::class], ilOneDriveActionListGUI::CMD_INIT_RENAME, "", false, false);
         $after_upload_url = $DIC->ctrl()->getLinkTargetByClass([ilObjCloudGUI::class, ilCloudPluginUploadGUI::class], ilOneDriveUploadGUI::CMD_AFTER_UPLOAD, "", false, false);
@@ -25,7 +27,17 @@ class ilOneDriveInitGUI extends ilCloudPluginInitGUI {
             'PLUGIN_AFTER_CONTENT',
             '<script type="text/javascript">' .
             'il.OneDriveList = new OneDriveList("' . $rename_url . '", "' . $after_upload_url . '");' .
+            'databayOneDrivePlugin.show(' . json_encode($info) . ');' .
             '</script>'
         );
+    }
+
+    public function addToolbar($root_node)
+    {
+        if (!$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId())) {
+            $this->setPermUploadItems(false);
+        }
+
+        return parent::addToolbar($root_node);
     }
 }

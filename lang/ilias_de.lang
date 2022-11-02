@@ -51,3 +51,40 @@ msg_name_already_exists#:#Eine Datei mit diesem Namen existiert bereits.
 msg_illegal_characters#:#Der angegebene Name darf keine unzulässigen Zeichen enthalten.
 msg_leading_or_trailing_spaces#:#Der angegebene Name darf keine führenden oder nachgestellten Leerzeichen enthalten.
 msg_rename_failed#:#Umbenennen fehlgeschlagen
+upload_started#:#Upload gestartet
+upload_aborted#:#Upload abgebrochen
+upload_complete#:#Upload abgeschlossen
+upload_failed#:#Upload fehlgeschlagen
+object_deleted#:#Objekt gelöscht
+object_renamed#:#Objekt umbenann
+event_type#:#Ereignis
+upload_start#:#Upload Start
+upload_end#:#Upload Ende
+range#:#Frist
+path#:#Pfad
+in_range#:#Abgabe innerhalb der Frist
+in_range_format#:#Abgabefrist: %s Tage, %s Stunden, %s Minuten
+after_range#:#Abgabe nach der Frist.
+after_range_format#:#Frist abgelaufen, keine Abgaben mehr möglich
+before_range#:#Abgegeben vor dem Start Datum
+before_range_format#:#Beginn der Abgabe %s:%s:%s
+extra_range#:#Abgabe innerhalb der Nachfrist, als verspätet gekennzeichnet
+extra_range_format#:#Nachfrist: %s Tage, %s Stunden, %s Minuten, Abgaben werden als verspätet gekennzeichnet
+in_range_missing_end#:#Abgabe innerhalb der Frist (Keine Abgabefrist)
+in_range_missing_end_format#:#Keine Abgabefrist
+no_range#:#Abgabe während die Frist deaktiviert war
+no_range_format#:#Deaktiviert
+upload_summary#:#Zusammenfassung
+id#:#ID
+timestamp#:#Timestamp
+object_type#:#Objekttyp
+additional_data#:#Zusätzliche Informationen
+cloud_object_id#:#Cloud Objekt ID
+file#:#Datei
+folder#:#Ordner
+start_date#:#Startzeit
+deadline#:#Abgabetermin
+end_date#:#Datum
+extra_date#:#Nachfrist
+export_event_log#:#Export Event Log
+schedule#:#Terminplan

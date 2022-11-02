@@ -11,30 +11,35 @@ class EventLogger
         int $user_id,
         int $obj_id,
         string $file_path,
-        string $renamed_from = ''
+        string $renamed_from = '',
+        array $additional_data = []
     ) {
+        if ($renamed_from) {
+            $additional_data['renamed_from'] = $renamed_from;
+        }
         self::log(
             $user_id,
             $obj_id,
             EventType::uploadStarted(),
             $file_path,
             ObjectType::file(),
-            $renamed_from ? ['renamed_from' => $renamed_from] : []
+            $additional_data
         );
     }
     
     public static function logUploadComplete(
         int $user_id,
         int $obj_id,
-        string $file_path
+        string $file_path,
+        array $additional_data = []
     ) {
-        self::log(
+        return self::log(
             $user_id,
             $obj_id,
             EventType::uploadComplete(),
             $file_path,
             ObjectType::file(),
-            []
+            $additional_data
         );
     }
     
@@ -43,7 +48,7 @@ class EventLogger
         int $obj_id,
         string $file_path
     ) {
-        self::log(
+        return self::log(
             $user_id,
             $obj_id,
             EventType::uploadAborted(),
@@ -59,7 +64,7 @@ class EventLogger
         string $file_path,
         string $message = ''
     ) {
-        self::log(
+        return self::log(
             $user_id,
             $obj_id,
             EventType::uploadFailed(),
@@ -119,5 +124,7 @@ class EventLogger
         $entry->setObjectType($object_type);
         $entry->setAdditionalData($additional_data);
         $entry->create();
+
+        return $entry;
     }
 }

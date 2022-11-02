@@ -103,7 +103,7 @@ class srChunkedDirectFileUploadInputGUI extends ilFormPropertyGUI
             $dir = __DIR__;
             $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
             $a_tpl->addJavaScript($dir . '../../../node_modules/blueimp-file-upload/js/jquery.fileupload.js');
-            $a_tpl->addJavaScript($dir .  '/js/ChunkedUpload.min.js');
+            $a_tpl->addJavaScript($dir .  '/js/ChunkedUpload.js');
             self::$js_loaded = true;
         }
     }

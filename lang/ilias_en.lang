@@ -51,3 +51,40 @@ msg_name_already_exists#:#A file with the same name already exists.
 msg_illegal_characters#:#The provided name cannot contain any illegal characters.
 msg_leading_or_trailing_spaces#:#The provided name cannot contain leading, or trailing, spaces.
 msg_rename_failed#:#Renaming failed
+upload_started#:#Upload started
+upload_aborted#:#Upload aborted
+upload_complete#:#Upload completed
+upload_failed#:#Upload failed
+object_deleted#:#Object deleted
+object_renamed#:#Object renamed
+event_type#:#Event
+upload_start#:#Upload Start
+upload_end#:#Upload End
+range#:#Deadline
+path#:#Path
+in_range#:#Submission before deadline
+in_range_format#:#Deadline: %s days, %s hours, %s minutes
+after_range#:#Deadline over.
+after_range_format#:#Deadline over, no submissions possible
+before_range#:#Submitted before start date
+before_range_format#:#Start of submissions %s:%s:%s
+extra_range#:#Submission before deadline, marked as delayed
+extra_range_format#:#Extra time: %s days, %s hours, %s minutes, submissions will be marked as delayed
+in_range_missing_end#:#Submission before deadline (no deadline set)
+in_range_missing_end_format#:#No deadline
+no_range#:#Deadline deactivated
+no_range_format#:#Deactivated
+upload_summary#:#Summary
+id#:#ID
+timestamp#:#Timestamp
+object_type#:#Objecttype
+additional_data#:#Additional information
+cloud_object_id#:#Cloud Object ID
+file#:#File
+folder#:#Folder
+start_date#:#Startdate
+deadline#:#Deadline
+end_date#:#Date
+extra_date#:#Extra date
+export_event_log#:#Export Event Log
+schedule#:#Schedule

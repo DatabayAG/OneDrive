@@ -61,7 +61,7 @@ function OneDriveList(url_rename, url_after_upload) {
             }
             if(data.success)
             {
-                perm_link = $("#current_perma_link").val();
+                const perm_link = $("#current_perma_link").val();
                 window.location.replace(perm_link);
             }
             else
@@ -89,7 +89,7 @@ function OneDriveList(url_rename, url_after_upload) {
             type: 'POST',
             url: url_after_upload,
             data: { filename: file.name }
-        });
+        }).done(window.databayOneDrivePlugin.fileUploaded);
         il.CloudFileList.afterUpload('chunked upload successfully completed');
     }
 }

@@ -52,7 +52,7 @@ class exodClientBusiness extends exodClientBase {
         $this->setRequestContentType(exodCurl::JSON);
         $response = $this->getResponseJsonDecoded();
         if (is_null($response)) {
-            throw new ilCloudException('could not create upload session from OneDrive (empty response)');
+            throw new ilCloudException(-1, 'could not create upload session from OneDrive (empty response)');
         }
         return ResumableUploadUrlDTO::fromStdClass($response);
     }
@@ -102,7 +102,7 @@ class exodClientBusiness extends exodClientBase {
 		$this->request();
 
 		$n = new exodFile();
-		$n->loadFromStdClass($this->getResponseJsonDecoded());
+		$n->loadFromStdClass($this->getResponseJsonDecoded() ?? new \stdClass());
 
 		return $n;
 	}
