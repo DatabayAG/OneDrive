@@ -14,6 +14,7 @@ use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\Filesystem\Stream\Stream;
 use ilUtil;
 use Psr\Http\Message\ResponseInterface as Response;
+use Exception;
 
 class Databay
 {
@@ -31,7 +32,7 @@ class Databay
 
     public function beforeSetContent(ilObjCloud $obj): array
     {
-        $settings = Settings::fromCloudId($obj->getId());
+        $settings = Settings::fromCloudId((int) $obj->getId());
 
         return [
             'text' => $this->determineStatusText($settings),
@@ -174,7 +175,7 @@ class Databay
         $result = $database->queryF('SELECT firstname, lastname, login FROM usr_data WHERE usr_id = %s', ['integer'], [$user_id]);
         $result = $database->fetchAssoc($result);
         if (!$result) {
-            throw new \Exception('Could not find user with id: ' . $user_id);
+            throw new Exception('Could not find user with id: ' . $user_id);
         }
 
         return $this->formatUser($result['firstname'], $result['lastname'], $result['login']);
@@ -203,7 +204,7 @@ class Databay
     {
         $this->container->http()->saveResponse($response);
         $this->container->http()->sendResponse();
-        $this->container->http()->close();
+        $this->close();
     }
 
     private function formatUser(string $firstname, string $lastname, string $login): string
@@ -219,5 +220,19 @@ class Databay
     public function iliasTxt(string $string): string
     {
         return $this->container->language()->txt($string);
+    }
+
+    private function close(): void
+    {
+        if ($this->newerThanILIAS5()) { // In ILIAS 5 ILIAS\HTTP\GlobalHttpState::close(...) doesn't exist.
+            $this->container->http()->close();
+        } else {
+            exit;
+        }
+    }
+
+    private function newerThanILIAS5(): bool
+    {
+        return current(explode('.', ILIAS_VERSION_NUMERIC)) > 5;
     }
 }

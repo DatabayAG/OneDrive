@@ -2,6 +2,7 @@ window.databayOneDrivePlugin = (function(){
     const showStatusAt = function(node){
         const add = document.createElement('div');
         add.textContent = this.text;
+        add.style.marginTop = '10px';
         node.parentNode.appendChild(add);
     };
 

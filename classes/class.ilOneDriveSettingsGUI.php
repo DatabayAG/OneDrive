@@ -41,20 +41,29 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
         $this->form->addItem($section);
 
         $start_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('start_date'), 'start_date');
-        $start_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('start_date', ''), 0));
         $this->form->addItem($start_date);
 
-        $end = new ilCheckboxInputGUI($this->getPluginHookObject()->txt('deadline'), 'end');
-        $end->setChecked(true);
-        $this->form->addItem($end);
         $end_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('end_date'), 'end_date');
-        $end_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('end_date', ''), 0));
-        $end->addSubItem($end_date);
+        $start_date->addSubItem($end_date);
         $extra_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('extra_date'), 'extra_date');
-        $extra_date->setDate(ilCalendarUtil::parseIncomingDate($this->settings->get('extra_date', ''), 0));
         $end_date->addSubItem($extra_date);
     }
 
+    protected function getPluginSettingsValues(&$values)
+    {
+        $values['start_date'] = $this->dateOf('start_date');
+        $values['end_date'] = $this->dateOf('end_date');
+        $values['extra_date'] = $this->dateOf('extra_date');
+    }
+
+    private function dateOf(string $key)
+    {
+        $value = ilCalendarUtil::parseIncomingDate($this->settings->get($key, ''), 0);
+        if (is_object($value)) {
+            return $value->get(IL_CAL_DATE);
+        }
+        return $value;
+    }
 
     public function updateSettings() {
 		global $DIC;
