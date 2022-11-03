@@ -25,7 +25,7 @@ window.databayOneDrivePlugin = (function(){
         const firstNode = document.querySelector(first);
         const status = showStatus(info);
         if(firstNode) {
-            firstNode.insertBefore(firstNode.children[0], status);
+            firstNode.insertBefore(status, firstNode.children[0]);
         } else {
             [].slice.call(document.querySelectorAll(second)).forEach(function(x){
                 x.parentNode.appendChild(status);
