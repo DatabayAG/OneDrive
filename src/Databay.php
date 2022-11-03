@@ -15,6 +15,8 @@ use ILIAS\Filesystem\Stream\Stream;
 use ilUtil;
 use Psr\Http\Message\ResponseInterface as Response;
 use Exception;
+use ilLink;
+use ilObjCloudGUI;
 
 class Databay
 {
@@ -36,6 +38,7 @@ class Databay
 
         return [
             'text' => $this->determineStatusText($settings),
+            'permaLink' => $this->permaLink(),
         ];
     }
 
@@ -91,11 +94,14 @@ class Databay
     private function refId(): int
     {
         $params = $this->container->http()->request()->getQueryParams();
-        if (!isset($params['ref_id'])) {
-            throw new Exception('Missing query parameter ref_id.');
+        if (isset($params['ref_id'])) {
+            return (int) $params['ref_id'];
+        } elseif ($this->container->http()->request()->getUri()->getPath() === '/goto.php' && isset($params['target']) && preg_match('/^cld_(\d+)/', $params['target'], $matches)) {
+            $this->container->ctrl()->setParameterByClass(ilObjCloudGUI::class, 'ref_id', $matches[1]);
+            $this->container->ctrl()->redirectToURL($this->container->ctrl()->getLinkTargetByClass(ilObjCloudGUI::class, ''));
         }
 
-        return (int) $params['ref_id'];
+        throw new Exception('Missing query parameter ref_id.');
     }
 
     private function isAdmin(int $id): bool
@@ -234,5 +240,10 @@ class Databay
     private function newerThanILIAS5(): bool
     {
         return current(explode('.', ILIAS_VERSION_NUMERIC)) > 5;
+    }
+
+    private function permaLink(): string
+    {
+        return ilLink::_getStaticLink($this->refId(), 'cld');
     }
 }
