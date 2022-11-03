@@ -5,7 +5,6 @@ namespace srag\Plugins\OneDrive\Databay;
 use ilSetting;
 use ilOneDriveSettingsGUI;
 use ilDateTime;
-use ilCalendarUtil;
 use srag\Plugins\OneDrive\Databay\Status\NoRange;
 use srag\Plugins\OneDrive\Databay\Status\InRange;
 use srag\Plugins\OneDrive\Databay\Status\After;
@@ -68,7 +67,7 @@ class Settings
 
     private function startDate(): ?ilDateTime
     {
-        return ilCalendarUtil::parseIncomingDate($this->settings->get('start_date', ''));
+        return $this->dateOf('start_date', '');
     }
 
     private function lastDateExists(): bool
@@ -78,12 +77,12 @@ class Settings
 
     private function endDate(): ?ilDateTime
     {
-        return ilCalendarUtil::parseIncomingDate($this->settings->get('end_date', ''));
+        return $this->dateOf('end_date', '');
     }
 
     private function extraDate(): ?ilDateTime
     {
-        return ilCalendarUtil::parseIncomingDate($this->settings->get('extra_date', ''));
+        return $this->dateOf('extra_date', '');
     }
 
     private function isAfterLastDate(): bool
@@ -116,5 +115,18 @@ class Settings
     private function extraDateExists(): bool
     {
         return (bool) $this->extraDate();
+    }
+
+    private function dateOf(string $key): ?ilDateTime
+    {
+        $value = $this->settings->get($key, '');
+        if (!$value) {
+            return null;
+        }
+        try {
+            return new ilDateTime($value, IL_CAL_DATETIME);
+        } catch (ilDateTimeException $e) {
+            return null;
+        }
     }
 }

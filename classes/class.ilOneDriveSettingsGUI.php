@@ -41,28 +41,22 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
         $this->form->addItem($section);
 
         $start_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('start_date'), 'start_date');
+        $start_date->setShowTime(true);
         $this->form->addItem($start_date);
 
         $end_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('end_date'), 'end_date');
+        $end_date->setShowTime(true);
         $start_date->addSubItem($end_date);
         $extra_date = new ilDateTimeInputGUI($this->getPluginHookObject()->txt('extra_date'), 'extra_date');
+        $extra_date->setShowTime(true);
         $end_date->addSubItem($extra_date);
     }
 
     protected function getPluginSettingsValues(&$values)
     {
-        $values['start_date'] = $this->dateOf('start_date');
-        $values['end_date'] = $this->dateOf('end_date');
-        $values['extra_date'] = $this->dateOf('extra_date');
-    }
-
-    private function dateOf(string $key)
-    {
-        $value = ilCalendarUtil::parseIncomingDate($this->settings->get($key, ''), 0);
-        if (is_object($value)) {
-            return $value->get(IL_CAL_DATE);
-        }
-        return $value;
+        $values['start_date'] = $this->settings->get('start_date', '');
+        $values['end_date'] = $this->settings->get('end_date', '');
+        $values['extra_date'] = $this->settings->get('extra_date', '');
     }
 
     public function updateSettings() {
