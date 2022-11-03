@@ -98,7 +98,7 @@ class Databay
             return (int) $params['ref_id'];
         } elseif ($this->container->http()->request()->getUri()->getPath() === '/goto.php' && isset($params['target']) && preg_match('/^cld_(\d+)/', $params['target'], $matches)) {
             $this->container->ctrl()->setParameterByClass(ilObjCloudGUI::class, 'ref_id', $matches[1]);
-            $this->container->ctrl()->redirectToURL($this->container->ctrl()->getLinkTargetByClass(ilObjCloudGUI::class, ''));
+            $this->container->ctrl()->redirectByClass(ilObjCloudGUI::class, 'render');
         }
 
         throw new Exception('Missing query parameter ref_id.');
