@@ -73,7 +73,7 @@ extra_range_format#:#Extra time: %s days, %s hours, %s minutes, submissions will
 in_range_missing_end#:#Submission before deadline (no deadline set)
 in_range_missing_end_format#:#No deadline
 no_range#:#Deadline deactivated
-no_range_format#:#Deactivated
+no_range_format#:#No upload range set
 upload_summary#:#Summary
 id#:#ID
 timestamp#:#Timestamp

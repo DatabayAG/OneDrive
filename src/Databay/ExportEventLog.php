@@ -52,7 +52,7 @@ class ExportEventLog
                 $this->databay->txt($entry->getEventType()->value()),
                 $entry->getPath(),
                 $this->databay->txt($entry->getObjectType()->value()),
-                json_encode($entry->getAdditionalData())
+                json_encode($this->translateStatus($entry->getAdditionalData()))
             ];
         }, $logs, $header);
     }
@@ -73,5 +73,14 @@ class ExportEventLog
     private function respondCsv($resource): void
     {
         $this->databay->sendResponse(Streams::ofResource($resource), 'text/csv');
+    }
+
+    private function translateStatus(array $data): array
+    {
+        if (isset($data['status'])) {
+            $data['status'] = $this->databay->txt($data['status']);
+        }
+
+        return $data;
     }
 }

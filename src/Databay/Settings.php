@@ -34,7 +34,7 @@ class Settings
         }
 
         if ($this->isBeforeStartDate()) {
-            return new Before($this->startDate());
+            return new Before($this->now(), $this->startDate());
         }
 
         if (!$this->lastDateExists()) {

@@ -9,10 +9,13 @@ use DateTimeImmutable;
 class Before implements Status
 {
     /** @var ilDatetime */
+    private $now;
+    /** @var ilDatetime */
     private $start;
 
-    public function __construct(ilDateTime $start)
+    public function __construct(ilDateTime $now, ilDateTime $start)
     {
+        $this->now = $now;
         $this->start = $start;
     }
 
@@ -23,10 +26,8 @@ class Before implements Status
 
     public function string(callable $txt): string
     {
-        $diff = (new DateTimeImmutable('@' . $this->now->getUnixTime()))->diff(
-            new DateTimeImmutable('@' . $this->start->getUnixTime())
-        );
-        return sprintf($txt('before_range_format'), $diff->days, $diff->h, $diff->i);
+        $date = $this->start->get(IL_CAL_FKT_GETDATE);
+        return sprintf($txt('before_range_format'), $date['mday'], $date['mon'], $date['year'], $date['hours'], $date['minutes']);
     }
 
     public function userCanEnter(): bool

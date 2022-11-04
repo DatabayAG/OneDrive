@@ -67,13 +67,13 @@ in_range_format#:#Abgabefrist: %s Tage, %s Stunden, %s Minuten
 after_range#:#Abgabe nach der Frist.
 after_range_format#:#Frist abgelaufen, keine Abgaben mehr möglich
 before_range#:#Abgegeben vor dem Start Datum
-before_range_format#:#Beginn der Abgabe %s:%s:%s
+before_range_format#:#Beginn der Abgabe %02s.%02.s.%s %02.s:%02.s
 extra_range#:#Abgabe innerhalb der Nachfrist, als verspätet gekennzeichnet
 extra_range_format#:#Nachfrist: %s Tage, %s Stunden, %s Minuten, Abgaben werden als verspätet gekennzeichnet
 in_range_missing_end#:#Abgabe innerhalb der Frist (Keine Abgabefrist)
 in_range_missing_end_format#:#Keine Abgabefrist
 no_range#:#Abgabe während die Frist deaktiviert war
-no_range_format#:#Deaktiviert
+no_range_format#:#Keine Fristen vorhanden
 upload_summary#:#Zusammenfassung
 id#:#ID
 timestamp#:#Timestamp
