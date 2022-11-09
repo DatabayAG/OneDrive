@@ -54,7 +54,7 @@ class ilOneDriveSettingsGUI extends ilCloudPluginSettingsGUI {
 
     protected function getPluginSettingsValues(&$values)
     {
-        $values['start_date'] = $this->settings->get('start_date', '');
+        $values['start_date'] = $this->settings->get('start_date', (new DateTimeImmutable())->format('Y-m-d H:i:00'));
         $values['end_date'] = $this->settings->get('end_date', '');
         $values['extra_date'] = $this->settings->get('extra_date', '');
     }
