@@ -145,3 +145,15 @@ if ($res = $DIC->database()->fetchAssoc($query)) {
 <?php
 srag\Plugins\OneDrive\EventLog\EventLogEntryAR::updateDB();
 ?>
+<#10>
+<?php
+global $DIC;
+require_once('./Customizing/global/plugins/Modules/Cloud/CloudHook/OneDrive/classes/class.ilOneDriveSettingsGUI.php');
+$query = 'SELECT obj_id, title FROM object_data WHERE type = "cld"';
+$date = (new DateTimeImmutable())->format('Y-m-d H:i:00');
+$result = $DIC->database()->query($query);
+while (($row = $DIC->database()->fetchAssoc($result))) {
+    $settings = ilOneDriveSettingsGUI::createSettings((int) $row['obj_id']);
+    $settings->set('start_date', $settings->get('start_date', $date) ?: $date);
+}
+?>
