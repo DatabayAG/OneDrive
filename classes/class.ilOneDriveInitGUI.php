@@ -34,7 +34,7 @@ class ilOneDriveInitGUI extends ilCloudPluginInitGUI {
 
     public function addToolbar($root_node)
     {
-        if (!$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId(), (int) $this->getGUIClass()->object->getRefId())) {
+        if (!$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId())) {
             $this->setPermUploadItems(false);
         }
 
