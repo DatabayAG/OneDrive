@@ -31,7 +31,9 @@ class ilOneDriveUploadGUI extends ilCloudPluginUploadGUI
 
     public function asyncUploadFile()
     {
-        if (!$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId())) {
+        global $DIC;
+        $params = $DIC->http()->request()->getQueryParams();
+        if (!isset($params['ref_id']) || !$this->getPluginObject()->databay()->usersCanUpload($this->getPluginObject()->getObjId(), (int) $params['ref_id'])) {
             return;
         }
 

@@ -12,11 +12,9 @@ use srag\Plugins\OneDrive\Databay\ExportEventLog;
 use ilOneDrivePlugin;
 use ILIAS\Filesystem\Stream\Streams;
 use ILIAS\Filesystem\Stream\Stream;
-use ilUtil;
 use Psr\Http\Message\ResponseInterface as Response;
 use Exception;
 use ilLink;
-use ilObjCloudGUI;
 
 class Databay
 {
@@ -38,7 +36,7 @@ class Databay
 
         return [
             'text' => $this->determineStatusText($settings),
-            'permaLink' => $this->permaLink(),
+            'permaLink' => $this->permaLink((int) $obj->getRefId()),
         ];
     }
 
@@ -76,9 +74,9 @@ class Databay
         ];
     }
 
-    public function usersCanUpload(int $obj_id): bool
+    public function usersCanUpload(int $obj_id, int $ref_id): bool
     {
-        return $this->userCanEnter($this->refId(), Settings::fromCloudId($obj_id));
+        return $this->userCanEnter($ref_id, Settings::fromCloudId($obj_id));
     }
 
     public function exportEventLog(int $obj_id): ExportEventLog
@@ -89,19 +87,6 @@ class Databay
     private function userCanEnter(int $ref_id, Settings $settings): bool
     {
         return $this->isAdmin($ref_id) || $settings->status()->userCanEnter();
-    }
-
-    private function refId(): int
-    {
-        $params = $this->container->http()->request()->getQueryParams();
-        if (isset($params['ref_id'])) {
-            return (int) $params['ref_id'];
-        } elseif ($this->container->http()->request()->getUri()->getPath() === '/goto.php' && isset($params['target']) && preg_match('/^cld_(\d+)/', $params['target'], $matches)) {
-            $this->container->ctrl()->setParameterByClass(ilObjCloudGUI::class, 'ref_id', $matches[1]);
-            $this->container->ctrl()->redirectByClass(ilObjCloudGUI::class, 'render');
-        }
-
-        throw new Exception('Missing query parameter ref_id.');
     }
 
     private function isAdmin(int $id): bool
@@ -242,8 +227,8 @@ class Databay
         return current(explode('.', ILIAS_VERSION_NUMERIC)) > 5;
     }
 
-    private function permaLink(): string
+    private function permaLink(int $ref_id): string
     {
-        return ilLink::_getStaticLink($this->refId(), 'cld');
+        return ilLink::_getStaticLink($ref_id, 'cld');
     }
 }
